@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Sidebar, MobileNav } from "@/components/layout/sidebar";
@@ -30,6 +31,30 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      if (now.getHours() === 20 && now.getMinutes() === 0) {
+        const today = now.toISOString().split('T')[0];
+        const entries = JSON.parse(localStorage.getItem('reflection_entries') || '[]');
+        const hasLoggedToday = entries.some((e: any) => e.date === today);
+        
+        if (!hasLoggedToday && Notification.permission === "granted") {
+          new Notification("Time to Reflect", {
+            body: "Take a moment to log your daily scores.",
+            icon: "/favicon.png"
+          });
+        }
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <TooltipProvider>
       <Toaster />
