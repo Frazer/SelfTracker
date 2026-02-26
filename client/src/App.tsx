@@ -1,16 +1,30 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Sidebar, MobileNav } from "@/components/layout/sidebar";
+import { useAppData } from "@/hooks/use-app-data";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 import DailyLog from "@/pages/daily-log";
 import Categories from "@/pages/categories";
 import Stats from "@/pages/stats";
 import History from "@/pages/history";
+import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
 function Router() {
+  const { categories } = useAppData();
+  const [location, setLocation] = useLocation();
+  const [isFirstVisit, setIsFirstVisit] = useLocalStorage("first_visit", true);
+
+  useEffect(() => {
+    if (isFirstVisit) {
+      setIsFirstVisit(false);
+      setLocation("/categories");
+    }
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 font-sans text-foreground">
       <Sidebar />
@@ -21,6 +35,7 @@ function Router() {
           <Route path="/categories" component={Categories} />
           <Route path="/stats" component={Stats} />
           <Route path="/history" component={History} />
+          <Route path="/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>
       </main>
@@ -31,16 +46,16 @@ function Router() {
 }
 
 function App() {
-  useEffect(() => {
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission();
-    }
+  const [notificationTime, setNotificationTime] = useLocalStorage("notification_time", "20:00");
 
+  useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      if (now.getHours() === 20 && now.getMinutes() === 0) {
+      const [hour, minute] = notificationTime.split(':').map(Number);
+      
+      if (now.getHours() === hour && now.getMinutes() === minute) {
         const today = now.toISOString().split('T')[0];
-        const entries = JSON.parse(localStorage.getItem('reflection_entries') || '[]');
+        const entries = JSON.parse(localStorage.getItem('app-entries') || '[]');
         const hasLoggedToday = entries.some((e: any) => e.date === today);
         
         if (!hasLoggedToday && Notification.permission === "granted") {
@@ -53,7 +68,7 @@ function App() {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [notificationTime]);
 
   return (
     <TooltipProvider>

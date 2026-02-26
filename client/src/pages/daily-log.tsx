@@ -1,26 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format, addDays, subDays } from "date-fns";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, CheckCircle2 } from "lucide-react";
 import { useAppData } from "@/hooks/use-app-data";
 import { Slider } from "@/components/ui/slider-custom";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 
 export default function DailyLog() {
   const { categories, getEntryValue, setEntryValue } = useAppData();
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [showGuided, setShowGuided] = useState(false);
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const { width, height } = useWindowSize();
+
+  const dateStr = format(currentDate, "yyyy-MM-dd");
+  const isToday = dateStr === format(new Date(), "yyyy-MM-dd");
+  const hasStartedToday = categories.some(c => getEntryValue(currentDate, c.id) !== undefined);
+
+  useEffect(() => {
+    if (isToday && !hasStartedToday && categories.length > 0) {
+      setShowGuided(true);
+    }
+  }, [isToday, hasStartedToday, categories.length]);
 
   const handlePrevDay = () => setCurrentDate(subDays(currentDate, 1));
   const handleNextDay = () => setCurrentDate(addDays(currentDate, 1));
 
-  // Determine greeting based on time of day
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-  const isToday = format(currentDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
+
+  const currentCategory = categories[guidedStep];
+
+  const handleGuidedNext = () => {
+    if (guidedStep < categories.length - 1) {
+      setGuidedStep(prev => prev + 1);
+    } else {
+      setShowGuided(false);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 5000);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 pb-20 md:pb-0">
+      {showSuccess && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} gravity={0.2} />}
+      
       <header className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
@@ -30,9 +59,6 @@ export default function DailyLog() {
             <p className="text-muted-foreground text-lg">
               Track your daily habits and reflections.
             </p>
-          </div>
-          <div className="hidden md:block">
-            {/* Optional: Add a motivational quote or simple stat here */}
           </div>
         </div>
 
@@ -60,6 +86,18 @@ export default function DailyLog() {
 
       <main className="space-y-6">
         <AnimatePresence mode="wait">
+          {showSuccess && (
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="flex flex-col items-center justify-center py-12 space-y-4 bg-primary/10 rounded-3xl border border-primary/20"
+            >
+              <CheckCircle2 className="w-16 h-16 text-primary animate-bounce" />
+              <h2 className="text-2xl font-bold text-primary">Great job reflecting today!</h2>
+            </motion.div>
+          )}
+
           <motion.div
             key={currentDate.toISOString()}
             initial={{ opacity: 0, y: 10 }}
@@ -105,12 +143,6 @@ export default function DailyLog() {
                       className="py-2"
                       color={category.color}
                     />
-                    
-                    <div className="flex justify-between text-xs text-muted-foreground mt-3 px-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span>Poor</span>
-                      <span>Average</span>
-                      <span>Excellent</span>
-                    </div>
                   </div>
                 );
               })
@@ -118,6 +150,53 @@ export default function DailyLog() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <Dialog open={showGuided} onOpenChange={setShowGuided}>
+        <DialogContent className="sm:max-w-md bg-card border-border/50">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-display">Ready to score your day?</DialogTitle>
+            <DialogDescription>
+              Take a moment to reflect on your performance for today.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {currentCategory && (
+            <div className="py-8 space-y-8">
+              <div className="text-center space-y-2">
+                <div 
+                  className="w-12 h-12 rounded-full mx-auto mb-4" 
+                  style={{ backgroundColor: currentCategory.color, boxShadow: `0 0 20px ${currentCategory.color}40` }}
+                />
+                <h3 className="text-2xl font-bold">{currentCategory.name}</h3>
+                <p className="text-muted-foreground italic">How would you rate this today?</p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <span className="text-6xl font-bold text-primary font-mono">
+                    {getEntryValue(currentDate, currentCategory.id) ?? 0}
+                  </span>
+                </div>
+                <Slider
+                  value={[getEntryValue(currentDate, currentCategory.id) ?? 0]}
+                  min={0}
+                  max={10}
+                  step={1}
+                  onValueChange={([val]) => setEntryValue(currentDate, currentCategory.id, val)}
+                  color={currentCategory.color}
+                  className="py-4"
+                />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button className="w-full h-12 text-lg" onClick={handleGuidedNext}>
+              {guidedStep < categories.length - 1 ? "Next Category" : "Finish Reflection"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

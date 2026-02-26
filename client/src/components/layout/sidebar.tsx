@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Calendar, Settings, BarChart3, LineChart } from "lucide-react";
+import { LayoutDashboard, Calendar, Settings, BarChart3, LineChart, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
@@ -10,6 +10,7 @@ export function Sidebar() {
     { href: "/stats", label: "Statistics", icon: BarChart3 },
     { href: "/history", label: "History", icon: LineChart },
     { href: "/categories", label: "Categories", icon: Settings },
+    { href: "/settings", label: "App Settings", icon: Smartphone },
   ];
 
   return (
@@ -54,7 +55,8 @@ export function MobileNav() {
     { href: "/", label: "Log", icon: Calendar },
     { href: "/stats", label: "Stats", icon: BarChart3 },
     { href: "/history", label: "History", icon: LineChart },
-    { href: "/categories", label: "Settings", icon: Settings },
+    { href: "/categories", label: "Track", icon: Settings },
+    { href: "/settings", label: "App", icon: Smartphone },
   ];
 
   return (
