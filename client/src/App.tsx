@@ -22,6 +22,7 @@ function Router() {
     if (isFirstVisit) {
       setIsFirstVisit(false);
       setLocation("/categories");
+      setLocation("/SelfTracker/categories");
     }
   }, []);
 
@@ -36,6 +37,11 @@ function Router() {
           <Route path="/stats" component={Stats} />
           <Route path="/history" component={History} />
           <Route path="/settings" component={Settings} />
+          <Route path="/SelfTracker" component={DailyLog} />
+          <Route path="/SelfTracker/categories" component={Categories} />
+          <Route path="/SelfTracker/stats" component={Stats} />
+          <Route path="/SelfTracker/history" component={History} />
+          <Route path="/SelfTracker/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>
       </main>
