@@ -5,13 +5,12 @@ import { cn } from "@/lib/utils";
 export function Sidebar() {
   const [location] = useLocation();
 
-  const baseHref = import.meta.env.BASE_URL;
   const links = [
-    { href: "/", label: "Daily Log", icon: Calendar },
-    { href: "/stats", label: "Statistics", icon: BarChart3 },
-    { href: "/history", label: "History", icon: LineChart },
-    { href: "/categories", label: "Categories", icon: Settings },
-    { href: "/settings", label: "App Settings", icon: Smartphone },
+    { href: "/SelfTracker", label: "Daily Log", icon: Calendar },
+    { href: "/SelfTracker/stats", label: "Statistics", icon: BarChart3 },
+    { href: "/SelfTracker/history", label: "History", icon: LineChart },
+    { href: "/SelfTracker/categories", label: "Categories", icon: Settings },
+    { href: "/SelfTracker/settings", label: "App Settings", icon: Smartphone },
   ];
 
   return (
@@ -53,11 +52,11 @@ export function MobileNav() {
   const [location] = useLocation();
 
   const links = [
-    { href: "/", label: "Log", icon: Calendar },
-    { href: "/stats", label: "Stats", icon: BarChart3 },
-    { href: "/history", label: "History", icon: LineChart },
-    { href: "/categories", label: "Track", icon: Settings },
-    { href: "/settings", label: "App", icon: Smartphone },
+    { href: "/SelfTracker", label: "Log", icon: Calendar },
+    { href: "/SelfTracker/stats", label: "Stats", icon: BarChart3 },
+    { href: "/SelfTracker/history", label: "History", icon: LineChart },
+    { href: "/SelfTracker/categories", label: "Track", icon: Settings },
+    { href: "/SelfTracker/settings", label: "App", icon: Smartphone },
   ];
 
   return (
