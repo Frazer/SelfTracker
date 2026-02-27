@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 
 export function Sidebar() {
   const [location] = useLocation();
+
+  const baseHref = import.meta.env.BASE_URL;
   const links = [
     { href: "/", label: "Daily Log", icon: Calendar },
     { href: "/stats", label: "Statistics", icon: BarChart3 },
