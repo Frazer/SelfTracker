@@ -21,7 +21,6 @@ function Router() {
   useEffect(() => {
     if (isFirstVisit) {
       setIsFirstVisit(false);
-      setLocation("/categories");
       setLocation("/SelfTracker/categories");
     }
   }, []);
@@ -32,11 +31,6 @@ function Router() {
       
       <main className="flex-1 md:ml-64 p-6 md:p-12 overflow-x-hidden w-full">
         <Switch>
-          <Route path="/" component={DailyLog} />
-          <Route path="/categories" component={Categories} />
-          <Route path="/stats" component={Stats} />
-          <Route path="/history" component={History} />
-          <Route path="/settings" component={Settings} />
           <Route path="/SelfTracker" component={DailyLog} />
           <Route path="/SelfTracker/categories" component={Categories} />
           <Route path="/SelfTracker/stats" component={Stats} />
