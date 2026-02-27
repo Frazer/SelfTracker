@@ -1,6 +1,8 @@
 # SelfTracker
 A simple daily score system - what you track improves
 
+View here https://frazer.github.io/SelfTracker/
 
-Decided to make it with Replit
+First 2 prompts with Replit
 https://mood-tracker--NeoJex.replit.app
+
