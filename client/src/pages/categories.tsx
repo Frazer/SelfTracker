@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useState, useEffect } from "react";
 import { useAppData, type Category } from "@/hooks/use-app-data";
 import { Button } from "@/components/ui/button";
@@ -131,9 +130,6 @@ function CategoryDialog({
   const [color, setColor] = useState(initialData?.color || PRESET_COLORS[0]);
 
   // Reset state when dialog opens
-  if (isOpen && initialData && name !== initialData.name) setName(initialData.name);
-  if (isOpen && initialData && color !== initialData.color) setColor(initialData.color);
-  if (isOpen && !initialData && name !== "") setName("");
   useEffect(() => {
     if (isOpen) {
       setName(initialData?.name || "");
