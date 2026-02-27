@@ -1,10 +1,8 @@
-import { Link, useLocation } from "wouter";
 import { useLocation } from "wouter";
 import { LayoutDashboard, Calendar, Settings, BarChart3, LineChart, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
-  const [location] = useLocation();
   const [location, setLocation] = useLocation();
 
   const links = [
@@ -29,10 +27,6 @@ export function Sidebar() {
           const Icon = link.icon;
           const isActive = location === link.href;
           return (
-            <Link key={link.href} href={link.href} className={cn(
-              "nav-item",
-              isActive && "active"
-            )}>
             <a
               key={link.href}
               href={`#${link.href}`}
@@ -45,7 +39,6 @@ export function Sidebar() {
             >
               <Icon className="w-5 h-5" />
               <span>{link.label}</span>
-            </Link>
             </a>
           );
         })}
@@ -62,7 +55,6 @@ export function Sidebar() {
 }
 
 export function MobileNav() {
-  const [location] = useLocation();
   const [location, setLocation] = useLocation();
 
   // mobile nav should also only list /SelfTracker-prefixed links
@@ -81,10 +73,6 @@ export function MobileNav() {
           const Icon = link.icon;
           const isActive = location === link.href;
           return (
-            <Link key={link.href} href={link.href} className={cn(
-              "flex flex-col items-center gap-1 p-2 rounded-lg transition-colors",
-              isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-            )}>
             <a
               key={link.href}
               href={`#${link.href}`}
@@ -100,7 +88,6 @@ export function MobileNav() {
             >
               <Icon className={cn("w-6 h-6", isActive && "fill-current/20")} />
               <span className="text-[10px] font-medium">{link.label}</span>
-            </Link>
             </a>
           );
         })}
