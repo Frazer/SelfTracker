@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export function Sidebar() {
   const [location] = useLocation();
 
-]  const links = [
+  const links = [
     { href: "/SelfTracker", label: "Daily Log", icon: Calendar },
     { href: "/SelfTracker/stats", label: "Statistics", icon: BarChart3 },
     { href: "/SelfTracker/history", label: "History", icon: LineChart },
