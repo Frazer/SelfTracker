@@ -4,21 +4,13 @@ import { cn } from "@/lib/utils";
 
 export function Sidebar() {
   const [location] = useLocation();
-  const rawLinks = [
+  const links = [
     { href: "/", label: "Daily Log", icon: Calendar },
     { href: "/stats", label: "Statistics", icon: BarChart3 },
     { href: "/history", label: "History", icon: LineChart },
     { href: "/categories", label: "Categories", icon: Settings },
     { href: "/settings", label: "App Settings", icon: Smartphone },
   ];
-
-  const base = import.meta.env.BASE_URL || "/";
-  const prefix = base === "/" ? "" : base.replace(/\/$/, "");
-
-  const links = rawLinks.map((link) => ({
-    ...link,
-    href: `${prefix}${link.href}`,
-  }));
 
   return (
     <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 border-r border-border/50 bg-background/50 backdrop-blur-xl p-6">
@@ -58,21 +50,13 @@ export function Sidebar() {
 export function MobileNav() {
   const [location] = useLocation();
 
-  const rawLinks = [
+  const links = [
     { href: "/", label: "Log", icon: Calendar },
     { href: "/stats", label: "Stats", icon: BarChart3 },
     { href: "/history", label: "History", icon: LineChart },
     { href: "/categories", label: "Track", icon: Settings },
     { href: "/settings", label: "App", icon: Smartphone },
   ];
-
-  const base = import.meta.env.BASE_URL || "/";
-  const prefix = base === "/" ? "" : base.replace(/\/$/, "");
-
-  const links = rawLinks.map((link) => ({
-    ...link,
-    href: `${prefix}${link.href}`,
-  }));
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border/50 bg-background/80 backdrop-blur-xl px-6 py-3 z-50">
