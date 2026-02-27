@@ -20,24 +20,46 @@ export default function DailyLog() {
 
   const dateStr = format(currentDate, "yyyy-MM-dd");
   const isToday = dateStr === format(new Date(), "yyyy-MM-dd");
-  const hasStartedToday = categories.some(c => getEntryValue(currentDate, c.id) !== undefined);
+
+  // compute list of categories that still need scoring for the current date
+  const remainingCategories = categories.filter(
+    (c) => getEntryValue(currentDate, c.id) === undefined
+  );
+
+  // if nothing remains, the user has already scored today
+  const hasStartedToday = remainingCategories.length === 0;
+
+  const hour = new Date().getHours();
+  const isAfterFour = hour >= 16; // pop up only after 4pm
 
   useEffect(() => {
-    if (isToday && !hasStartedToday && categories.length > 0) {
+    if (
+      isToday &&
+      !hasStartedToday &&
+      categories.length > 0 &&
+      isAfterFour
+    ) {
       setShowGuided(true);
     }
-  }, [isToday, hasStartedToday, categories.length]);
+  }, [isToday, hasStartedToday, categories.length, isAfterFour]);
 
   const handlePrevDay = () => setCurrentDate(subDays(currentDate, 1));
   const handleNextDay = () => setCurrentDate(addDays(currentDate, 1));
 
-  const hour = new Date().getHours();
+  // if the set of remaining categories changes (e.g. user scores one manually), restart the guided step
+  useEffect(() => {
+    if (guidedStep >= remainingCategories.length) {
+      setGuidedStep(0);
+    }
+  }, [remainingCategories.length, guidedStep]);
+
+  // reuse previously computed `hour` for greeting
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  const currentCategory = categories[guidedStep];
+  const currentCategory = remainingCategories[guidedStep];
 
   const handleGuidedNext = () => {
-    if (guidedStep < categories.length - 1) {
+    if (guidedStep < remainingCategories.length - 1) {
       setGuidedStep(prev => prev + 1);
     } else {
       setShowGuided(false);
@@ -192,7 +214,7 @@ export default function DailyLog() {
 
           <DialogFooter>
             <Button className="w-full h-12 text-lg" onClick={handleGuidedNext}>
-              {guidedStep < categories.length - 1 ? "Next Category" : "Finish Reflection"}
+              {guidedStep < remainingCategories.length - 1 ? "Next Category" : "Finish Reflection"}
             </Button>
           </DialogFooter>
         </DialogContent>
