@@ -1,4 +1,5 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route, useLocation, Router as WouterRouter } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,7 +14,7 @@ import History from "@/pages/history";
 import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
-function Router() {
+function AppRouter() {
   const { categories } = useAppData();
   const [location, setLocation] = useLocation();
   const [isFirstVisit, setIsFirstVisit] = useLocalStorage("first_visit", true);
@@ -73,7 +74,9 @@ function App() {
   return (
     <TooltipProvider>
       <Toaster />
-      <Router />
+      <WouterRouter hook={useHashLocation}>
+        <AppRouter />
+      </WouterRouter>
     </TooltipProvider>
   );
 }
