@@ -6,11 +6,11 @@ export function Sidebar() {
   const [location, setLocation] = useLocation();
 
   const links = [
-    { href: "/SelfTracker", label: "Daily Log", icon: Calendar },
-    { href: "/SelfTracker/stats", label: "Statistics", icon: BarChart3 },
-    { href: "/SelfTracker/history", label: "History", icon: LineChart },
-    { href: "/SelfTracker/categories", label: "Categories", icon: Settings },
-    { href: "/SelfTracker/settings", label: "App Settings", icon: Smartphone },
+    { href: "/", label: "Daily Log", icon: Calendar },
+    { href: "/stats", label: "Statistics", icon: BarChart3 },
+    { href: "/history", label: "History", icon: LineChart },
+    { href: "/categories", label: "Categories", icon: Settings },
+    { href: "/settings", label: "App Settings", icon: Smartphone },
   ];
 
   return (
@@ -57,13 +57,13 @@ export function Sidebar() {
 export function MobileNav() {
   const [location, setLocation] = useLocation();
 
-  // mobile nav should also only list /SelfTracker-prefixed links
+  // mobile nav links
   const links = [
-    { href: "/SelfTracker", label: "Log", icon: Calendar },
-    { href: "/SelfTracker/stats", label: "Stats", icon: BarChart3 },
-    { href: "/SelfTracker/history", label: "History", icon: LineChart },
-    { href: "/SelfTracker/categories", label: "Track", icon: Settings },
-    { href: "/SelfTracker/settings", label: "App", icon: Smartphone },
+    { href: "/", label: "Log", icon: Calendar },
+    { href: "/stats", label: "Stats", icon: BarChart3 },
+    { href: "/history", label: "History", icon: LineChart },
+    { href: "/categories", label: "Track", icon: Settings },
+    { href: "/settings", label: "App", icon: Smartphone },
   ];
 
   return (

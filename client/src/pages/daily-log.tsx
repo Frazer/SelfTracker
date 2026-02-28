@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { format, addDays, subDays } from "date-fns";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, CheckCircle2 } from "lucide-react";
 import { useAppData } from "@/hooks/use-app-data";
@@ -11,6 +12,7 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 
 export default function DailyLog() {
+  const [, setLocation] = useLocation();
   const { categories, getEntryValue, setEntryValue } = useAppData();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showGuided, setShowGuided] = useState(false);
@@ -131,7 +133,7 @@ export default function DailyLog() {
             {categories.length === 0 ? (
               <div className="text-center py-20 border border-dashed border-border rounded-2xl bg-secondary/10">
                 <p className="text-muted-foreground">No categories set up yet.</p>
-                <Button variant="link" className="text-primary mt-2" onClick={() => window.location.href = "/categories"}>
+                <Button variant="link" className="text-primary mt-2" onClick={() => setLocation("/categories")}>
                   Go to Settings to add categories
                 </Button>
               </div>
